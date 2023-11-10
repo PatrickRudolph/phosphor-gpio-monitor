@@ -105,6 +105,8 @@ Following are fields in json file
 6. ExtraInterfaces: [Optional] List of interfaces to associate to inventory item
 7. ActiveLow: [Optional] Object is present on LOW level
 8. Bias: [Optional] Configure a BIAS on the GPIO line, for example PULL_UP
+9. DbusProperty: [Optional] Use the specified property name instead of the default.
+                 The default property name is 'Present'.
 
 ## Sample config file
 

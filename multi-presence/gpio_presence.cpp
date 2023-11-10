@@ -71,7 +71,7 @@ GpioPresence::ObjectMap GpioPresence::getObjectMap(bool present)
     InterfaceMap invIntf;
     PropertyMap invProp;
 
-    invProp.emplace("Present", present);
+    invProp.emplace(property, present);
     invProp.emplace("PrettyName", name);
     invIntf.emplace("xyz.openbmc_project.Inventory.Item", std::move(invProp));
     // Add any extra interfaces we want to associate with the inventory item
@@ -89,8 +89,8 @@ void GpioPresence::updateInventory(bool present)
     ObjectMap invObj = getObjectMap(present);
 
     lg2::info(
-        "Updating inventory present property value to {PRESENT}, path: {PATH}",
-        "PRESENT", present, "PATH", inventory);
+        "Updating inventory {PROPERTY} property value to {PRESENT}, path: {PATH}",
+        "PROPERTY", property, "PRESENT", present, "PATH", inventory);
 
     auto bus = sdbusplus::bus::new_default();
     auto invService = getService(INVENTORY_PATH, INVENTORY_INTF, bus);

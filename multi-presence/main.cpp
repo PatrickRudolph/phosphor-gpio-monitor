@@ -101,6 +101,9 @@ int main(int argc, char** argv)
         /* List of interfaces to associate to inventory item */
         std::vector<std::string> extraInterfaces;
 
+        /* Optional name of Dbus property to update. */
+        std::string dbusproperty = defaultProperty;
+
         if (obj.find("LineName") == obj.end())
         {
             /* If there is no line Name defined then gpio num nd chip
@@ -158,6 +161,11 @@ int main(int argc, char** argv)
             name = obj["Name"].get<std::string>();
         }
 
+        if (obj.find("DbusProperty") != obj.end())
+        {
+            dbusproperty = obj["DbusProperty"].get<std::string>();
+        }
+
         /* Parse optional bias */
         if (obj.find("Bias") != obj.end())
         {
@@ -187,7 +195,8 @@ int main(int argc, char** argv)
 
         /* Create a monitor object and let it do all the rest */
         gpios.push_back(phosphor::gpio::GpioPresence(
-            line, config, io, inventory, extraInterfaces, name, lineMsg));
+            line, config, io, inventory, extraInterfaces, name, lineMsg,
+            dbusproperty));
     }
     io.run();
 

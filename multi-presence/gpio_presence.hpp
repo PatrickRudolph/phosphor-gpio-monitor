@@ -15,6 +15,7 @@
 
 static constexpr auto deviceField = 0;
 static constexpr auto pathField = 1;
+static constexpr auto defaultProperty = "Present";
 using Device = std::string;
 using Path = std::filesystem::path;
 using Driver = std::tuple<Device, Path>;
@@ -59,14 +60,18 @@ class GpioPresence
                                       inventory item
      *  @param[in] name             - PrettyName of inventory object
      *  @param[in] lineMsg          - GPIO line message to be used for log
+     *  @param[in] dbusProperty     - The property to update under the specified
+     *                                object path. By default 'Present' is used.
      */
     GpioPresence(gpiod_line* line, gpiod_line_request_config& config,
                  boost::asio::io_context& io, const std::string& inventory,
                  const std::vector<std::string>& extraInterfaces,
-                 const std::string& name, const std::string& lineMsg) :
+                 const std::string& name, const std::string& lineMsg,
+                 const std::string& dbusProperty) :
         gpioLine(line),
         gpioConfig(config), gpioEventDescriptor(io), inventory(inventory),
-        interfaces(extraInterfaces), name(name), gpioLineMsg(lineMsg)
+        interfaces(extraInterfaces), name(name), gpioLineMsg(lineMsg),
+        property((dbusProperty != "") ? dbusProperty : defaultProperty)
     {
         requestGPIOEvents();
     };
@@ -106,6 +111,9 @@ class GpioPresence
 
     /** @brief GPIO line name message */
     const std::string gpioLineMsg;
+
+    /** @brief The Dbus property to update under the object path */
+    const std::string property;
 
     /** @brief register handler for gpio event
      *
